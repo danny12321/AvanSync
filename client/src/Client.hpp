@@ -16,6 +16,9 @@ public:
 
 private:
     asio::ip::tcp::iostream server;
+
+    void handleRequest();
+
     const char* server_address{ "localhost" };
     const char* server_port{ "12345" };
     const char* prompt{ "avansync> " };

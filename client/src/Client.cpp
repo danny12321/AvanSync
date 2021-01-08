@@ -13,17 +13,35 @@ Client::Client() {
 
 void Client::run() {
     while (server) {
-        std::string resp;
-        if (getline(server, resp)) {
-            resp.erase(resp.end() - 1); // remove '\r'
-            std::cout << resp << lf;
-            if (resp == "Bye.") break;
-
-            std::cout << prompt;
-            std::string req;
-            if (getline(std::cin, req)) {
-                server << req << crlf;
-            }
-        }
+        handleRequest();
     }
+}
+
+void Client::handleRequest() {
+    for(std::string line; std::getline(server, line).good();) {
+        line.erase(line.end() - 1); // remove '\r'
+        std::cout << line << std::endl;
+
+        if(server.rdbuf()->in_avail() == 0)
+            break;
+    }
+
+    std::cout << prompt;
+    std::string req;
+    if (getline(std::cin, req)) {
+        server << req << crlf;
+    }
+
+
+//    if (getline(server, resp)) {
+//        resp.erase(resp.end() - 1); // remove '\r'
+//        std::cout << resp << lf;
+//        if (resp == "Bye.") server.close();
+//
+//        std::cout << prompt;
+//        std::string req;
+//        if (getline(std::cin, req)) {
+//            server << req << crlf;
+//        }
+//    }
 }

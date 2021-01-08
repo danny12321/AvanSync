@@ -15,12 +15,18 @@ public:
     [[noreturn]] void run();
 
 private:
+    void handleRequest(asio::ip::tcp::iostream &client, std::string &request);
+
     std::unique_ptr<asio::ip::tcp::acceptor> server;
     std::unique_ptr<asio::io_context> io_context;
+
+    std::vector<std::string> parse_request(const std::string &request);
 
     const int server_port{ 12345 };
     const char* lf{ "\n" };
     const char* crlf{ "\r\n" };
+
+    void handleClient();
 };
 
 
