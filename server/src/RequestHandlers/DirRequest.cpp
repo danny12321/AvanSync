@@ -5,6 +5,8 @@
 #include <iostream>
 #include "DirRequest.hpp"
 #include <filesystem>
+#include <chrono>
+#include <iomanip>
 
 void DirRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) {
     if (request.size() != 2) {
@@ -22,20 +24,14 @@ void DirRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vecto
     std::ostringstream response;
 
     for (const auto & entry : std::filesystem::directory_iterator(path)){
-        response << getFileChar(entry) << "|" << entry.path().filename().string() << "|TIJD|" << std::to_string(entry.file_size()) << "|\n" ;
+        response <<
+            getFileChar(entry) << "|" <<
+            entry.path().filename().string() << "|" <<
+            getTime(entry) << "|" <<
+            std::to_string(entry.file_size()) << "|\n";
     }
 
     client << response.str() << crlf;
-
-//    std::cout << "Dir request" << std::endl;
-//
-//    response += "F|file1.txt|2020-03-05 23:45:18|34107\n";
-//    response += "F|file2.txt|2018-10-23 08:05:30|218\n";
-//    response += "D|Stuff|2020-11-11 16:25:00|0\n";
-//    response += "F|trainingdata.dat|2016-04-01 21:15:53|200\n";
-//    response += "*|my_symlink|2020-12-05 12:34:56|0\n";
-//
-//    client << response << crlf;
 }
 
 char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const {
@@ -43,4 +39,16 @@ char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const
     if(file.is_regular_file()) return 'F';
 
     return '*';
+}
+
+std::string DirRequest::getTime(const std::filesystem::directory_entry &file) const {
+    std::filesystem::file_time_type file_time = std::filesystem::last_write_time(file);
+
+    auto sctp = file_time - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now();
+    std::time_t tt = std::chrono::system_clock::to_time_t(sctp);
+
+    std::tm *gmt = std::gmtime(&tt);
+    std::stringstream buffer;
+    buffer << std::put_time(gmt, "%Y-%m-%d %H:%M:%S");
+    return buffer.str();
 }

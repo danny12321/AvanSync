@@ -45,7 +45,9 @@ void Server::handleRequest(asio::ip::tcp::iostream &client, std::string &request
 
     std::cout << "client says: " << request << lf;
     auto arguments = parse_request(request);
-    RequestFactory().getRequestHandler(arguments)->handleRequest(client, arguments);
+
+    if(!arguments.empty())
+        RequestFactory().getRequestHandler(arguments)->handleRequest(client, arguments);
 }
 
 std::vector<std::string> Server::parse_request(const std::string &request) {
