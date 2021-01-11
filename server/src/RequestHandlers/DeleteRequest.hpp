@@ -10,7 +10,7 @@
 
 class DeleteRequest : public RequestHandler {
 public:
-    void handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) override;
+    void handleRequest(ServerClient &client, const std::vector<std::string> &request) override;
 
 };
 

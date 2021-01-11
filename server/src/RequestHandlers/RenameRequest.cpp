@@ -5,17 +5,17 @@
 #include "RenameRequest.hpp"
 #include <filesystem>
 
-void RenameRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) {
+void RenameRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
     if(request.size() != 3) {
-        client << "Expected 2 arguments. \"" + request.at(0) + " <path> <new name>\"" << crlf;
+        client.getIOStream() << "Expected 2 arguments. \"" + request.at(0) + " <path> <new name>\"" << crlf;
         return;
     }
 
-    const std::string &path = request.at(1);
-    const std::string &newName = request.at(2);
+    const std::string &path = client.getServer().getRootDir() + request.at(1);
+    const std::string &newName = client.getServer().getRootDir() + request.at(2);
 
     if (!std::filesystem::exists(path)) {
-        client << "Error: no such file or directory" << crlf;
+        client.getIOStream() << "Error: no such file or directory" << crlf;
         return;
     }
 
@@ -24,5 +24,5 @@ void RenameRequest::handleRequest(asio::ip::tcp::iostream &client, const std::ve
 //  TODO: maybe keep the folder place
     std::filesystem::rename(path, newName);
 
-    client << "OK" << crlf;
+    client.getIOStream() << "OK" << crlf;
 }

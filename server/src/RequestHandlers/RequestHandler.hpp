@@ -6,11 +6,11 @@
 #define AVANSYNC_REQUESTHANDLER_HPP
 
 #include <string>
-#include <asio/ip/tcp.hpp>
+#include "../ServerClient.hpp"
 
 class RequestHandler {
 public:
-    virtual void handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) = 0;
+    virtual void handleRequest(ServerClient &client, const std::vector<std::string> &request) = 0;
 
 protected:
     const char* crlf{ "\r\n" };

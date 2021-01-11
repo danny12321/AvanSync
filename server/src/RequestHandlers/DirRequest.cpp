@@ -8,16 +8,16 @@
 #include <chrono>
 #include <iomanip>
 
-void DirRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) {
+void DirRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
     if (request.size() != 2) {
-        client << "Expected 1 argument for the " + request.at(0) + " command. \"" +request.at(0)+" <directory>\"" << crlf;
+        client.getIOStream() << "Expected 1 argument for the " + request.at(0) + " command. \"" +request.at(0)+" <directory>\"" << crlf;
         return;
     }
 
-    const std::string& path = request.at(1);
+    const std::string& path = client.getServer().getRootDir() + request.at(1);
 
     if(!std::filesystem::is_directory(path)) {
-        client << "Error: no such directory" << crlf;
+        client.getIOStream() << "Error: no such directory" << crlf;
         return;
     }
 
@@ -28,10 +28,10 @@ void DirRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vecto
             getFileChar(entry) << "|" <<
             entry.path().filename().string() << "|" <<
             getTime(entry) << "|" <<
-            std::to_string(entry.file_size()) << "|\n";
+            std::to_string(entry.file_size()) << "|" << crlf;
     }
 
-    client << response.str() << crlf;
+    client.getIOStream() << response.str() << crlf;
 }
 
 char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const {

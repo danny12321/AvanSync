@@ -14,17 +14,22 @@ public:
 
     [[noreturn]] void run();
 
+    [[nodiscard]] const std::string &getRootDir() const { return root_dir; }
+
+    [[nodiscard]] const char *getLF() const { return lf; }
+
+    [[nodiscard]] const char *getCRLF() const { return crlf; }
+
 private:
-    void handleRequest(asio::ip::tcp::iostream &client, std::string &request);
 
     std::unique_ptr<asio::ip::tcp::acceptor> server;
     std::unique_ptr<asio::io_context> io_context;
 
-    std::vector<std::string> parse_request(const std::string &request);
 
-    const int server_port{ 12345 };
-    const char* lf{ "\n" };
-    const char* crlf{ "\r\n" };
+    const int server_port{12345};
+    const char *lf{"\n"};
+    const char *crlf{"\r\n"};
+    const std::string root_dir{"./server_dir/"};
 
     void handleClient();
 };

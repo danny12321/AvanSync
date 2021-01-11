@@ -12,6 +12,8 @@
 #include "AddDirectoryRequest.hpp"
 #include "DeleteRequest.hpp"
 #include "RenameRequest.hpp"
+#include "UploadRequest.hpp"
+#include "DownloadRequest.hpp"
 
 std::unique_ptr<RequestHandler> RequestFactory::getRequestHandler(const std::vector<std::string> &request) {
     std::string req = request.at(0);
@@ -25,6 +27,8 @@ std::unique_ptr<RequestHandler> RequestFactory::getRequestHandler(const std::vec
     if (req == "MKDIR") return std::make_unique<AddDirectoryRequest>();
     if (req == "REN") return std::make_unique<RenameRequest>();
     if (req == "DEL") return std::make_unique<DeleteRequest>();
+    if (req == "PUT") return std::make_unique<UploadRequest>();
+    if (req == "GET") return std::make_unique<DownloadRequest>();
     if (req == "QUIT") return std::make_unique<QuitRequest>();
 
     return std::make_unique<UnknownRequest>();

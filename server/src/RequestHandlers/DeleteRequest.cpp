@@ -5,16 +5,16 @@
 #include "DeleteRequest.hpp"
 #include <filesystem>
 
-void DeleteRequest::handleRequest(asio::ip::tcp::iostream &client, const std::vector<std::string> &request) {
+void DeleteRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
     if (request.size() != 2) {
-        client << "Expected 1 argument. \"" + request.at(0) + " <path>\"";
+        client.getIOStream() << "Expected 1 argument. \"" + request.at(0) + " <path>\"";
         return;
     }
 
-    const std::string &path = request.at(1);
+    const std::string &path = client.getServer().getRootDir() + request.at(1);
 
     if (!std::filesystem::exists(path)) {
-        client << "Error: no such file or directory" << crlf;
+        client.getIOStream() << "Error: no such file or directory" << crlf;
         return;
     }
 
@@ -22,6 +22,6 @@ void DeleteRequest::handleRequest(asio::ip::tcp::iostream &client, const std::ve
 
     bool success = std::filesystem::remove_all(path);
 
-    if (success) client << "OK" << crlf;
-    else client << "Something went wrong" << crlf;
+    if (success) client.getIOStream() << "OK" << crlf;
+    else client.getIOStream() << "Something went wrong" << crlf;
 }
