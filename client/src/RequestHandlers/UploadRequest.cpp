@@ -5,14 +5,21 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <numeric>
 #include "UploadRequest.hpp"
 
 void UploadRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
 
+    std::string path;
+    path = std::accumulate(arguments.begin() + 1, arguments.end(), std::string(),
+                           [](std::string &ss, std::string &s)
+                           {
+                               return ss.empty() ? s : ss + " " + s;
+                           });
+
     // TODO CHECK IF FILE EXIST
 
-    auto path = arguments.at(1);
     client.getServer() << "PUT" << client.getCRLF();
     client.getServer() << path << client.getCRLF();
     client.getServer() << std::filesystem::file_size((client.getRootDir() + path).c_str()) << client.getCRLF();

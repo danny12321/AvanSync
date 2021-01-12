@@ -12,6 +12,8 @@
 #include "DeleteRequest.hpp"
 #include "AddDirectoryRequest.hpp"
 #include "UnknownRequest.hpp"
+#include "QuitRequest.hpp"
+#include "SyncRequest.hpp"
 
 std::unique_ptr<RequestHandler> RequestFactory::getRequestHandler(const std::vector<std::string> &request) {
     std::string req = request.at(0);
@@ -25,6 +27,8 @@ std::unique_ptr<RequestHandler> RequestFactory::getRequestHandler(const std::vec
     if (req == "REN") return std::make_unique<RenameRequest>();
     if (req == "DEL") return std::make_unique<DeleteRequest>();
     if (req == "MKDIR") return std::make_unique<AddDirectoryRequest>();
+    if (req == "QUIT") return std::make_unique<QuitRequest>();
+    if (req == "SYNC") return std::make_unique<SyncRequest>();
 
     return std::make_unique<UnknownRequest>();
 }

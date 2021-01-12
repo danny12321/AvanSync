@@ -28,6 +28,8 @@ public:
 
     std::vector<std::string> splitOnChar(const std::string &s, char split);
 
+    void disconnect();
+
 private:
     asio::ip::tcp::iostream server;
 
@@ -40,6 +42,8 @@ private:
     const char *lf{"\n"};
     const char *crlf{"\r\n"};
     const std::string root_dir{"./client_dir/"};
+
+    bool connected = true;
 
 };
 

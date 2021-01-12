@@ -26,7 +26,8 @@ void DirRequest::handleRequest(ServerClient &client, const std::vector<std::stri
             std::to_string(entry.file_size()) << "|" << crlf;
     }
 
-    client.getIOStream() << response.str() << crlf;
+    if(response.tellp() == 0) client.getIOStream() << crlf;
+    else client.getIOStream() << response.str();
 }
 
 char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const {
@@ -38,9 +39,8 @@ char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const
 
 std::string DirRequest::getTime(const std::filesystem::directory_entry &file) const {
     std::filesystem::file_time_type file_time = std::filesystem::last_write_time(file);
-
     auto sctp = file_time - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now();
-    std::time_t tt = std::chrono::system_clock::to_time_t(sctp);
+    std::time_t tt = std::chrono::system_clock::to_time_t(sctp) + 3600;
 
     std::tm *gmt = std::gmtime(&tt);
     std::stringstream buffer;

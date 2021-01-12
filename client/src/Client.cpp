@@ -11,16 +11,13 @@ Client::Client() {
     server = asio::ip::tcp::iostream{server_address, server_port};
     if (!server) throw std::runtime_error("could not connect to server");
 
-    asio::socket_base::send_buffer_size option(8);
-    server.socket().set_option(option);
-
     const auto &messages = getMessages();
     for (const auto &message : messages)
         std::cout << message << lf;
 }
 
 void Client::run() {
-    while (server) {
+    while (server && connected) {
         handleRequest();
     }
 }
@@ -62,4 +59,8 @@ std::vector<std::string> Client::splitOnChar(const std::string &s, char split) {
     }
 
     return std::move(result);
+}
+
+void Client::disconnect() {
+    connected = false;
 }
