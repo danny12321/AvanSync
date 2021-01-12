@@ -22,7 +22,7 @@ public:
 
     [[nodiscard]] const char *getCRLF() const { return crlf; }
 
-    [[nodiscard]] const asio::ip::tcp::iostream &getServer() const { return server; }
+    [[nodiscard]] asio::ip::tcp::iostream &getServer() { return server; }
 
     [[nodiscard]] const std::string &getRootDir() const { return root_dir; }
 
