@@ -61,5 +61,5 @@ std::vector<std::string> Client::splitOnChar(const std::string &s, char split) {
         result.push_back(argument);
     }
 
-    return result;
+    return std::move(result);
 }

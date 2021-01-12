@@ -21,6 +21,10 @@ public:
 
     [[nodiscard]] Server &getServer() const { return server; }
 
+    std::string getLine();
+
+    std::vector<std::string> splitOnChar(const std::string &s, char split);
+
 private:
     void handleRequest(std::string &request);
 

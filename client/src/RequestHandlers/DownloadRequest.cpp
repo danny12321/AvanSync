@@ -9,17 +9,19 @@
 #include <asio.hpp>
 
 void DownloadRequest::handleRequest(Client &client, const std::string &request) {
-    client.sendMessage(request);
+    auto arguments = client.splitOnChar(request, ' ');
+    auto &path = arguments.at(1);
 
-    const auto path = client.splitOnChar(request, ' ').at(1);
+    client.getServer() << "GET" << client.getCRLF();
+    client.getServer() << arguments.at(1) << client.getCRLF();
+
     const auto directories = client.splitOnChar(path, '/');
-
     std::string directory_path;
     directory_path = std::accumulate(directories.begin(),directories.end() - 1, directory_path);
 
     // get the first message for the size
     auto messages = client.getMessages();
-    int size = std::stoi(messages.at(0));
+    int file_size = std::stoi(messages.at(0));
 
     // create directories and file
     std::filesystem::create_directories(std::filesystem::path(client.getRootDir() + directory_path));
@@ -28,9 +30,9 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
     const int buff_size = 512;
     int bytes_read = 0;
 
-    while (bytes_read < size) {
+    while (bytes_read < file_size) {
         // the last buffer will not be all the way full
-        int read_size =  size - bytes_read < buff_size ? size - bytes_read : buff_size;
+        int read_size =  file_size - bytes_read < buff_size ? file_size - bytes_read : buff_size;
         char buff[buff_size];
 
         // wait for the bytes to be available

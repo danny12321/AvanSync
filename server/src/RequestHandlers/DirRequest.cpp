@@ -9,12 +9,7 @@
 #include <iomanip>
 
 void DirRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
-    if (request.size() != 2) {
-        client.getIOStream() << "Expected 1 argument for the " + request.at(0) + " command. \"" +request.at(0)+" <directory>\"" << crlf;
-        return;
-    }
-
-    const std::string& path = client.getServer().getRootDir() + request.at(1);
+    const auto path = client.getServer().getRootDir() + client.getLine();
 
     if(!std::filesystem::is_directory(path)) {
         client.getIOStream() << "Error: no such directory" << crlf;

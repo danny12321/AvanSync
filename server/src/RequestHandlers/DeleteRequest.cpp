@@ -6,12 +6,7 @@
 #include <filesystem>
 
 void DeleteRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
-    if (request.size() != 2) {
-        client.getIOStream() << "Expected 1 argument. \"" + request.at(0) + " <path>\"";
-        return;
-    }
-
-    const std::string &path = client.getServer().getRootDir() + request.at(1);
+    const auto path = client.getServer().getRootDir() + client.getLine();
 
     if (!std::filesystem::exists(path)) {
         client.getIOStream() << "Error: no such file or directory" << crlf;

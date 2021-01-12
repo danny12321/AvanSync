@@ -13,16 +13,12 @@ ServerClient::ServerClient(Server &server, asio::ip::tcp::iostream &iostream) : 
 void ServerClient::Run() {
     iostream << "Welcome to AvanSync server 1.0" << server.getCRLF();
     while(connected) {
-        std::string request;
-        getline(iostream, request);
+        std::string request = getLine();
         handleRequest(request);
     }
 }
 
 void ServerClient::handleRequest(std::string &request) {
-    if(request.size() > 1)
-        request.erase(request.end() - 1); // remove '\r'
-
     std::cout << "client says: " << request << server.getLF();
     auto arguments = parse_request(request);
 
@@ -42,6 +38,26 @@ std::vector<std::string> ServerClient::parse_request(const std::string &request)
     return arguments;
 }
 
+std::vector<std::string> ServerClient::splitOnChar(const std::string &s, char split) {
+    std::vector<std::string> result;
+    std::stringstream ss(s); // Turn the string into a stream.
+    std::string argument;
+
+    while (getline(ss, argument, split)) {
+        result.push_back(argument);
+    }
+
+    return std::move(result);
+}
+
 void ServerClient::Disconnect() {
     connected = false;
+}
+
+std::string ServerClient::getLine() {
+    std::string request;
+    getline(iostream, request);
+    if(request.size() > 1)
+        request.erase(request.end() - 1);
+    return std::move(request);
 }
