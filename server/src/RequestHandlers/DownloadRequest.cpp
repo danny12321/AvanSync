@@ -5,7 +5,6 @@
 #include "DownloadRequest.hpp"
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 
 void DownloadRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
     if (request.size() != 2) {
@@ -13,7 +12,7 @@ void DownloadRequest::handleRequest(ServerClient &client, const std::vector<std:
         return;
     }
 
-    // TODO CHEKC IF FILE EXIST AND PERMISSIONS
+    // TODO CHECK IF FILE EXIST AND PERMISSIONS
 
     const auto &path = client.getServer().getRootDir() + request.at(1);
     client.getIOStream() << std::filesystem::file_size(path.c_str()) << crlf;
@@ -25,15 +24,9 @@ void DownloadRequest::handleRequest(ServerClient &client, const std::vector<std:
     }
 
     // Fill out the reply to be sent to the client.
-    int bytes_send = 0;
+    // Still seems to be a bit slow
     char buf[512];
     while (is.read(buf, sizeof(buf)).gcount() > 0) {
-        for (int i = 0; i < is.gcount(); ++i) {
-            bytes_send++;
-            client.getIOStream() << buf[i];
-        }
+        client.getIOStream().write(buf, is.gcount());
     }
-
-    std::cout << "Bytes send: " << bytes_send << std::endl;
-//    client.getIOStream() << crlf;
 }
