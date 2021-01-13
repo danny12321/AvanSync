@@ -21,7 +21,7 @@ void Client::run() {
         try {
             handleRequest();
         } catch (const std::exception &e) {
-            std::cerr << e.what() << lf;
+            std::cerr << "Something went wrong in the request: " << e.what() << lf;
         }
     }
 }

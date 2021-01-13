@@ -8,6 +8,11 @@
 void DeleteRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
 
+    if (arguments.size() != 2) {
+        std::cout << "Expected 1 argument: DEL <path>" << client.getLF();
+        return;
+    }
+
     client.getServer() << "DEL" << client.getCRLF();
     client.getServer() << arguments.at(1) << client.getCRLF();
 

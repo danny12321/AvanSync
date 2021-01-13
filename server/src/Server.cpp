@@ -5,10 +5,8 @@
 #include <iostream>
 #include "Server.hpp"
 #include "RequestHandlers/RequestFactory.hpp"
-#include "ServerClient.hpp"
 
 Server::Server() {
-//    asio::io_context io_context;
     io_context = std::make_unique<asio::io_context>();
     server = std::make_unique<asio::ip::tcp::acceptor>(*io_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), server_port));
 }

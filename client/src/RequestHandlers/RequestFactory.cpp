@@ -18,7 +18,7 @@
 std::unique_ptr<RequestHandler> RequestFactory::getRequestHandler(const std::vector<std::string> &request) {
     std::string req = request.at(0);
     std::transform(req.begin(), req.end(), req.begin(),
-                   [](unsigned char c) { return std::toupper(c); } // correct
+                   [](unsigned char c) { return std::toupper(c); }
     );
 
     if (req == "GET") return std::make_unique<DownloadRequest>();

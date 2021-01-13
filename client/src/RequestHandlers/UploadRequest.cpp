@@ -10,6 +10,10 @@
 
 void UploadRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
+    if(arguments.size() < 2) {
+        std::cout << "Error expected 1 argument: PUT <path>" << client.getLF();
+        return;
+    }
 
     std::string path;
     path = std::accumulate(arguments.begin() + 1, arguments.end(), std::string(),

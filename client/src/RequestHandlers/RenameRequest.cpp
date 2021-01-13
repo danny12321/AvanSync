@@ -8,6 +8,11 @@
 void RenameRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
 
+    if(arguments.size() != 3) {
+        std::cout << "Error: rename expected 2 arguments. REN <old path> <new path>" << client.getLF();
+        return;
+    }
+
     client.getServer() << "REN" << client.getCRLF();
     client.getServer() << arguments.at(1) << client.getCRLF();
     client.getServer() << arguments.at(2) << client.getCRLF();
