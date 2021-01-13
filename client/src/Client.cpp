@@ -18,7 +18,11 @@ Client::Client() {
 
 void Client::run() {
     while (server && connected) {
-        handleRequest();
+        try {
+            handleRequest();
+        } catch (const std::exception &e) {
+            std::cerr << e.what() << lf;
+        }
     }
 }
 
@@ -29,10 +33,6 @@ void Client::handleRequest() {
         auto request_handler = RequestFactory().getRequestHandler(splitOnChar(req, ' '));
         request_handler->handleRequest(*this, req);
     }
-}
-
-void Client::sendMessage(const std::string &message) {
-    server << message << crlf;
 }
 
 std::vector<std::string> Client::getMessages() {

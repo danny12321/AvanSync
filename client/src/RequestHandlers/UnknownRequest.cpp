@@ -6,5 +6,10 @@
 #include "UnknownRequest.hpp"
 
 void UnknownRequest::handleRequest(Client &client, const std::string &request) {
-    std::cout << "Dont know " << request << " request" << client.getLF();
+    client.getServer() << request << client.getCRLF();
+
+    auto messages = client.getMessages();
+
+    for(const auto &message : messages)
+        std::cout << message << client.getLF();
 }

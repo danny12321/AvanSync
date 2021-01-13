@@ -7,6 +7,11 @@
 
 void AddDirectoryRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
+    if(arguments.size() != 3) {
+        std::cout << "Error: expected 2 arguments <parent dir> <dir name>" << client.getLF();
+        return;
+    }
+
     const auto &path = arguments.at(1);
     const auto &name = arguments.at(2);
 

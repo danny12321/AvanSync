@@ -13,12 +13,15 @@ void UploadRequest::handleRequest(Client &client, const std::string &request) {
 
     std::string path;
     path = std::accumulate(arguments.begin() + 1, arguments.end(), std::string(),
-                           [](std::string &ss, std::string &s)
+                           [](const std::string &ss, const std::string &s)
                            {
                                return ss.empty() ? s : ss + " " + s;
                            });
 
-    // TODO CHECK IF FILE EXIST
+    if (!std::filesystem::exists(client.getRootDir() + path)) {
+        std::cout << "Error: no such file or directory" << client.getLF();
+        return;
+    }
 
     client.getServer() << "PUT" << client.getCRLF();
     client.getServer() << path << client.getCRLF();
@@ -27,9 +30,12 @@ void UploadRequest::handleRequest(Client &client, const std::string &request) {
     std::ifstream is((client.getRootDir() + path).c_str(), std::ios::in | std::ios::binary);
 
     // Fill out the reply to be sent to the server.
-    // Still seems to be a bit slow
     char buf[512];
     while (is.read(buf, sizeof(buf)).gcount() > 0) {
         client.getServer().write(buf, is.gcount());
     }
+
+    auto messages = client.getMessages();
+    for(const auto &message : messages)
+        std::cout << message << client.getLF();
 }

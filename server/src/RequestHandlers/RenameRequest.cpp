@@ -14,9 +14,11 @@ void RenameRequest::handleRequest(ServerClient &client, const std::vector<std::s
         return;
     }
 
-//    TODO: check permissions
+    if ((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) == std::filesystem::perms::none) {
+        client.getIOStream() << "Error: no permission" << crlf;
+        return;
+    }
 
-//  TODO: maybe keep the folder place
     std::filesystem::rename(path, newName);
 
     client.getIOStream() << "OK" << crlf;

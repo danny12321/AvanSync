@@ -14,7 +14,6 @@ void AddDirectoryRequest::handleRequest(ServerClient &client, const std::vector<
         return;
     }
 
-    // TODO: check this
     if((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) == std::filesystem::perms::none) {
         client.getIOStream() << "Error: no permission" << crlf;
         return;

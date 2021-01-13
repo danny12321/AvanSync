@@ -7,7 +7,7 @@
 
 void DirRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
-    auto &path = arguments.at(1);
+    auto path = arguments.size() > 1 ? arguments.at(1) : "";
 
     client.getServer() << "DIR" << client.getCRLF();
     client.getServer() << path << client.getCRLF();

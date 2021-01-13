@@ -14,13 +14,11 @@ public:
 
     void run();
 
-    void sendMessage(const std::string &message);
-
     std::vector<std::string> getMessages();
 
-    [[nodiscard]] const char *getLF() const { return lf; }
+    [[nodiscard]] const std::string &getLF() const { return lf; }
 
-    [[nodiscard]] const char *getCRLF() const { return crlf; }
+    [[nodiscard]] const std::string &getCRLF() const { return crlf; }
 
     [[nodiscard]] asio::ip::tcp::iostream &getServer() { return server; }
 
@@ -35,13 +33,13 @@ private:
 
     void handleRequest();
 
-    const char *server_address{"localhost"};
-    const char *server_port{"12345"};
-    const char *prompt{"avansync> "};
-
-    const char *lf{"\n"};
-    const char *crlf{"\r\n"};
+    const std::string server_address{"localhost"};
+    const std::string server_port{"12345"};
+    const std::string prompt{"avansync> "};
     const std::string root_dir{"./client_dir/"};
+
+    const std::string lf{"\n"};
+    const std::string crlf{"\r\n"};
 
     bool connected = true;
 

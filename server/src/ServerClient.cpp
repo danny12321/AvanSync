@@ -12,7 +12,8 @@ ServerClient::ServerClient(Server &server, asio::ip::tcp::iostream &iostream) : 
 
 void ServerClient::Run() {
     iostream << "Welcome to AvanSync server 1.0" << server.getCRLF();
-    while(connected) {
+    while(!clientDisconnected()) {
+        std::cout.flush();
         std::string request = getLine();
         handleRequest(request);
     }
@@ -59,5 +60,10 @@ std::string ServerClient::getLine() {
     getline(iostream, request);
     if(request.size() > 1)
         request.erase(request.end() - 1);
-    return std::move(request);
+    return request;
+}
+
+bool ServerClient::clientDisconnected() const {
+    if(!connected) return true;
+    return iostream.error().value() != 0;
 }

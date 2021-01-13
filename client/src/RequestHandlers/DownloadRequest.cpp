@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <numeric>
 #include <asio.hpp>
+#include <iostream>
 
 void DownloadRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
@@ -19,8 +20,16 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
     std::string directory_path;
     directory_path = std::accumulate(directories.begin(),directories.end() - 1, directory_path);
 
-    // get the first message for the size
+    // get the first message for the size or error
     auto messages = client.getMessages();
+
+    // if its not a number then it will be a error(s) to log
+    if(!is_number(messages.at(0))) {
+        for(const auto &message: messages)
+            std::cout << message << client.getLF();
+        return;
+    }
+
     int file_size = std::stoi(messages.at(0));
 
     // create directories and file
@@ -42,4 +51,10 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
         bytes_read += b.gcount();
         file.write(buff, b.gcount());
     }
+}
+
+bool DownloadRequest::is_number(const std::string& s)
+{
+    return !s.empty() && std::find_if(s.begin(),
+                                      s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }

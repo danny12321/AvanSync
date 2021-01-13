@@ -34,6 +34,8 @@ private:
     asio::ip::tcp::iostream &iostream;
 
     bool connected = true;
+
+    [[nodiscard]] bool clientDisconnected() const;
 };
 
 
