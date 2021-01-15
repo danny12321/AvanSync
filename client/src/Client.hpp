@@ -24,7 +24,7 @@ public:
 
     [[nodiscard]] const std::string &getRootDir() const { return root_dir; }
 
-    [[nodiscard]] std::vector<std::string> splitOnChar(const std::string &s, char split);
+    [[nodiscard]] std::vector<std::string> splitOnChar(const std::string &s, char split) const;
 
     void disconnect();
 

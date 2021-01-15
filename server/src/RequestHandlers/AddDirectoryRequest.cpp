@@ -9,18 +9,19 @@ void AddDirectoryRequest::handleRequest(ServerClient &client, const std::vector<
     const std::string &path = client.getServer().getRootDir() + client.getLine();
     const std::string &name = client.getLine();
 
-    if(!std::filesystem::is_directory(path)) {
+    if (!std::filesystem::is_directory(path)) {
         client.getIOStream() << "Error: no such directory" << crlf;
         return;
     }
 
-    if((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) == std::filesystem::perms::none) {
+    if ((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) ==
+        std::filesystem::perms::none) {
         client.getIOStream() << "Error: no permission" << crlf;
         return;
     }
 
     bool success = std::filesystem::create_directories(path + "/" + name);
 
-    if(success) client.getIOStream() << "OK" << crlf;
+    if (success) client.getIOStream() << "OK" << crlf;
     else client.getIOStream() << "Something went wrong" << crlf;
 }

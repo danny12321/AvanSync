@@ -12,7 +12,7 @@ ServerClient::ServerClient(Server &server, asio::ip::tcp::iostream &iostream) : 
 
 void ServerClient::Run() {
     iostream << "Welcome to AvanSync server 1.0" << server.getCRLF();
-    while(!clientDisconnected()) {
+    while (!clientDisconnected()) {
         std::cout.flush();
         std::string request = getLine();
         handleRequest(request);
@@ -21,25 +21,13 @@ void ServerClient::Run() {
 
 void ServerClient::handleRequest(std::string &request) {
     std::cout << "client says: " << request << server.getLF();
-    auto arguments = parse_request(request);
+    auto arguments = splitOnChar(request, ' ');
 
-    if(!arguments.empty())
+    if (!arguments.empty())
         RequestFactory().getRequestHandler(arguments)->handleRequest(*this, arguments);
 }
 
-std::vector<std::string> ServerClient::parse_request(const std::string &request) {
-    std::vector<std::string> arguments;
-    std::stringstream ss(request); // Turn the string into a stream.
-    std::string argument;
-
-    while(getline(ss, argument, ' ')) {
-        arguments.push_back(argument);
-    }
-
-    return arguments;
-}
-
-std::vector<std::string> ServerClient::splitOnChar(const std::string &s, char split) {
+std::vector<std::string> ServerClient::splitOnChar(const std::string &s, char split) const {
     std::vector<std::string> result;
     std::stringstream ss(s); // Turn the string into a stream.
     std::string argument;
@@ -58,12 +46,12 @@ void ServerClient::Disconnect() {
 std::string ServerClient::getLine() {
     std::string request;
     getline(iostream, request);
-    if(request.size() > 1)
+    if (request.size() > 1)
         request.erase(request.end() - 1);
     return request;
 }
 
-bool ServerClient::clientDisconnected() const {
-    if(!connected) return true;
+const bool ServerClient::clientDisconnected() const {
+    if (!connected) return true;
     return iostream.error().value() != 0;
 }

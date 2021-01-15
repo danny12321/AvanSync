@@ -12,7 +12,7 @@
 void DownloadRequest::handleRequest(Client &client, const std::string &request) {
     auto arguments = client.splitOnChar(request, ' ');
 
-    if(arguments.size() != 2) {
+    if (arguments.size() != 2) {
         std::cout << "Error expected 1 argument: GET <path>" << client.getLF();
         return;
     }
@@ -24,14 +24,14 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
 
     const auto directories = client.splitOnChar(path, '/');
     std::string directory_path;
-    directory_path = std::accumulate(directories.begin(),directories.end() - 1, directory_path);
+    directory_path = std::accumulate(directories.begin(), directories.end() - 1, directory_path);
 
     // get the first message for the size or error
     auto messages = client.getMessages();
 
     // if its not a number then it will be a error(s) to log
-    if(!is_number(messages.at(0))) {
-        for(const auto &message: messages)
+    if (!is_number(messages.at(0))) {
+        for (const auto &message: messages)
             std::cout << message << client.getLF();
         return;
     }
@@ -40,14 +40,14 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
 
     // create directories and file
     std::filesystem::create_directories(std::filesystem::path(client.getRootDir() + directory_path));
-    std::ofstream file(client.getRootDir() + path,  std::ios::out|std::ios::binary);
+    std::ofstream file(client.getRootDir() + path, std::ios::out | std::ios::binary);
 
     const int buff_size = 512;
     int bytes_read = 0;
 
     while (bytes_read < file_size) {
         // the last buffer will not be all the way full
-        int read_size =  file_size - bytes_read < buff_size ? file_size - bytes_read : buff_size;
+        int read_size = file_size - bytes_read < buff_size ? file_size - bytes_read : buff_size;
         char buff[buff_size];
 
         // wait for the bytes to be available
@@ -59,8 +59,7 @@ void DownloadRequest::handleRequest(Client &client, const std::string &request) 
     }
 }
 
-bool DownloadRequest::is_number(const std::string& s)
-{
+bool DownloadRequest::is_number(const std::string &s) {
     return !s.empty() && std::find_if(s.begin(),
                                       s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }

@@ -13,8 +13,8 @@ public:
     virtual void handleRequest(ServerClient &client, const std::vector<std::string> &request) = 0;
 
 protected:
-    const std::string crlf{ "\r\n" };
-    const std::string lf{ "\n" };
+    const std::string crlf{"\r\n"};
+    const std::string lf{"\n"};
 };
 
 #endif //AVANSYNC_REQUESTHANDLER_HPP

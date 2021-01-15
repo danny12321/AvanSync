@@ -6,7 +6,7 @@ int main() {
         Server server;
         server.run();
     }
-    catch (const std::exception& ex) {
+    catch (const std::exception &ex) {
         std::cerr << "server error: " << ex.what() << '\n';
         return EXIT_FAILURE;
     }

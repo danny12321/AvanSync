@@ -11,28 +11,28 @@
 void DirRequest::handleRequest(ServerClient &client, const std::vector<std::string> &request) {
     const auto path = client.getServer().getRootDir() + client.getLine();
 
-    if(!std::filesystem::is_directory(path)) {
+    if (!std::filesystem::is_directory(path)) {
         client.getIOStream() << "Error: no such directory" << crlf;
         return;
     }
 
     std::ostringstream response;
 
-    for (const auto & entry : std::filesystem::directory_iterator(path)){
+    for (const auto &entry : std::filesystem::directory_iterator(path)) {
         response <<
-            getFileChar(entry) << "|" <<
-            entry.path().filename().string() << "|" <<
-            getTime(entry) << "|" <<
-            std::to_string(entry.file_size()) << "|" << crlf;
+                 getFileChar(entry) << "|" <<
+                 entry.path().filename().string() << "|" <<
+                 getTime(entry) << "|" <<
+                 std::to_string(entry.file_size()) << "|" << crlf;
     }
 
-    if(response.tellp() == 0) client.getIOStream() << crlf;
+    if (response.tellp() == 0) client.getIOStream() << crlf;
     else client.getIOStream() << response.str();
 }
 
 char DirRequest::getFileChar(const std::filesystem::directory_entry &file) const {
-    if(file.is_directory()) return 'D';
-    if(file.is_regular_file()) return 'F';
+    if (file.is_directory()) return 'D';
+    if (file.is_regular_file()) return 'F';
 
     return '*';
 }

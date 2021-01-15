@@ -14,7 +14,8 @@ void DownloadRequest::handleRequest(ServerClient &client, const std::vector<std:
         return;
     }
 
-    if((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_read) == std::filesystem::perms::none) {
+    if ((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_read) ==
+        std::filesystem::perms::none) {
         client.getIOStream() << "Error: no permission" << crlf;
         return;
     }

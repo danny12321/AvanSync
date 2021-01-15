@@ -18,6 +18,6 @@ void DeleteRequest::handleRequest(Client &client, const std::string &request) {
 
     auto messages = client.getMessages();
 
-    for(const auto &message : messages)
+    for (const auto &message : messages)
         std::cout << message << client.getLF();
 }

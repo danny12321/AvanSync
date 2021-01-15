@@ -49,7 +49,7 @@ std::vector<std::string> Client::getMessages() {
     return lines;
 }
 
-std::vector<std::string> Client::splitOnChar(const std::string &s, char split) {
+std::vector<std::string> Client::splitOnChar(const std::string &s, char split) const {
     std::vector<std::string> result;
     std::stringstream ss(s); // Turn the string into a stream.
     std::string argument;

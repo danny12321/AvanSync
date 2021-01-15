@@ -23,19 +23,17 @@ public:
 
     std::string getLine();
 
-    std::vector<std::string> splitOnChar(const std::string &s, char split);
+    [[nodiscard]] std::vector<std::string> splitOnChar(const std::string &s, char split) const;
 
 private:
     void handleRequest(std::string &request);
-
-    std::vector<std::string> parse_request(const std::string &request);
 
     Server &server;
     asio::ip::tcp::iostream &iostream;
 
     bool connected = true;
 
-    [[nodiscard]] bool clientDisconnected() const;
+    [[nodiscard]] const bool clientDisconnected() const;
 };
 
 

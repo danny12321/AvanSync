@@ -13,7 +13,8 @@ void DeleteRequest::handleRequest(ServerClient &client, const std::vector<std::s
         return;
     }
 
-    if ((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) == std::filesystem::perms::none) {
+    if ((std::filesystem::status(path).permissions() & std::filesystem::perms::owner_write) ==
+        std::filesystem::perms::none) {
         client.getIOStream() << "Error: no permission" << crlf;
         return;
     }

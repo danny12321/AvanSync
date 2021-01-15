@@ -15,6 +15,7 @@ public:
 
 private:
     [[nodiscard]] char getFileChar(const std::filesystem::directory_entry &file) const;
+
     [[nodiscard]] std::string getTime(const std::filesystem::directory_entry &file) const;
 };
 
